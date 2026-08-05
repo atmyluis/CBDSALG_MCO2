@@ -1,0 +1,41 @@
+void dijkstra(Graph *m, int src) {
+    int visited[V];
+    int count = 0, done = 0, min;
+    int i, v, u;
+    for (i = 0; i < V; i++) {
+        m->dist[src][i] = INT_MAX;
+        visited[i] = 0;
+        m->prevV[src][i] = -1;
+    }
+    m->dist[src][src] = 0;
+
+    
+    while (count < V - 1 && !done) {
+        u = -1, min = INT_MAX;
+        for (v = 0; v < V; v++)
+            if (!visited[v] && m->dist[src][v] <= min) {
+                min = m->dist[src][v];
+                u = v;
+            }
+
+        if (u == -1) {
+            done = 1;
+        } else {
+            visited[u] = 1;
+            for (v = 0; v < V; v++) {
+                if (!visited[v] && m->adj[u][v] && m->dist[src][u] != INT_MAX
+                    && m->dist[src][u] + m->adj[u][v] < m->dist[src][v]) {
+                    m->dist[src][v] = m->dist[src][u] + m->adj[u][v];
+                    m->prevV[src][v] = u;
+                }
+            }
+        }
+        count++;
+    }
+}
+
+void computeAllPairs(Graph *m) {
+	int i;
+    for (i = 0; i < V; i++)
+        dijkstra(m, i);
+}
