@@ -47,7 +47,7 @@ void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int 
     }
 }
 
-int nameToIndex(Graph *m, const char *name) {
+int nameToIndex(Graph *m, const char *name) { //returns the index of the name
     int result = -1;
     int i = 0;
     while (i < V && result == -1) {
@@ -59,13 +59,13 @@ int nameToIndex(Graph *m, const char *name) {
     return result;
 }
 
-void setVertexNames(Graph *m, const char *vertexNames[V]) {
+void setVertexNames(Graph *m, const char *vertexNames[V]) { 
 	int i;
     for (i = 0; i < V; i++)
         strncpy(m->names[i], vertexNames[i], NAME_LEN - 1);
 }
 
-void buildGraph(Graph *m, const char *edgeNames[][2], int weights[], int edgeCount) {
+void buildGraph(Graph *m, const char *edgeNames[][2], int weights[], int edgeCount) { //"builds" the graph in Graph struct
 	int i, j, f, t, w;
     for (i = 0; i < V; i++)
         for (j = 0; j < V; j++)
