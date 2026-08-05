@@ -3,7 +3,7 @@ int main() {
 	RouteResult result;
 	int stops[MAX_STOPS]; 
 	char srcName[NAME_LEN], stopName[NAME_LEN];
-    int ok = 0; n = 0, i = 0, end = 0;
+    int ok = 0, n = 0, i = 0, end = 0;
     int src, idx, confirm;
 	
 	const char *vertexNames[V];
@@ -36,7 +36,7 @@ int main() {
 	            scanf(" %[^\n]", stopName);
 	            idx = nameToIndex(&map, stopName);
 	            if (idx == -1) {
-	                printf("\nUnknown vertex name: %s\n", stopName);
+	                printf("\nUnknown place: %s\n", stopName);
 	                ok = 0;
     	        } else {
 		        	stops[i] = idx;
@@ -49,7 +49,7 @@ int main() {
 	    if (ok) {
 	        followUserRoute(&map, stops, n, src, &result);
 	        if (result.total == INT_MAX) {
-	            printf("\nNo valid route exists: one or more vertices unreachable\n");
+	            printf("\nNo valid route exists: one or more places unreachable\n");
 	            printf("given the one-way streets (directed edges).\n");
 	            ok = 0;
 	        }
