@@ -1,3 +1,24 @@
+void printPath(Graph *m, int src, int dest) {
+	int i;
+    int path[V];
+    int at,  count = 0;
+    if (dest == src) {
+        printf("%s", m->names[src]);
+    } else if (m->prevV[src][dest] == -1) {
+        printf("NO PATH");
+    } else {
+		at = dest;
+        while (at != -1) {
+            path[count++] = at;
+            at = (at == src) ? -1 : m->prevV[src][at];
+        }
+        for (i = count - 1; i >= 0; i--) {
+            printf("%s", m->names[path[i]]);
+            if (i != 0) printf(" -> ");
+        }
+    }
+}
+
 void followUserRoute(Graph *m, int stops[], int n, int src, RouteResult *result) {
     int i;
     int current = src;
