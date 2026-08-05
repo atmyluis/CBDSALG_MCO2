@@ -1,0 +1,83 @@
+int main() {
+    Graph map;
+	RouteResult result;
+	int stops[MAX_STOPS]; 
+	char srcName[NAME_LEN], stopName[NAME_LEN];
+    int ok = 1, n = 0, i = 0, end = 0;
+    int src, idx, confirm;
+	
+	const char *vertexNames[V];
+    const char *edgeNames[E][2];
+    int weights[E];
+ 
+    initGraphData(vertexNames, edgeNames, weights);
+	setVertexNames(&map, vertexNames);
+    buildGraph(&map, edgeNames, weights, E);
+    computeAllPairs(&map);
+
+    while (!end){
+    	ok = 1;
+    	n = 0;
+    	i = 0;
+    	
+	    printf("\nEnter starting vertex name: ");
+	    scanf("%s", srcName);
+	    src = nameToIndex(&map, srcName);
+	
+	    if (src == -1) {
+	        printf("Unknown vertex name: %s\n", srcName);
+	        ok = 0;
+	    }
+	    
+	    if (ok) {
+	        printf("How many vertices do you want to visit? ");
+	        scanf("%d", &n);
+	
+	        printf("Enter %d vertex names in the ORDER you want to visit them (space separated): ", n);
+	        
+	        while (i < n && ok) {
+	            scanf("%s", stopName);
+	            idx = nameToIndex(&map, stopName);
+	            if (idx == -1) {
+	                printf("Unknown vertex name: %s\n", stopName);
+	                ok = 0;
+    	        } else {
+		        	stops[i] = idx;
+	            }
+	            i++;
+	        }
+	    }
+	
+	    
+	    if (ok) {
+	        followUserRoute(&map, stops, n, src, &result);
+	        if (result.total == INT_MAX) {
+	            printf("\nNo valid route exists: one or more vertices unreachable\n");
+	            printf("given the one-way streets (directed edges).\n");
+	            ok = 0;
+	        }
+	    }
+	
+	    if (ok) {
+	        printf("\nRoute (as entered): %s", map.names[src]);
+	        for (i = 0; i < n; i++)
+	            printf(" -> %s", map.names[result.order[i]]);
+	
+	        printf("\nTotal shortest distance: %d\n\n", result.total);
+	
+    	    printf("Full route with paths:\n");
+    	    int current = src;
+    	    for (i = 0; i < n; i++) {
+    	        printf("  %s to %s (dist %d): ", map.names[current], map.names[result.order[i]], map.dist[current][result.order[i]]);
+    	        printPath(&map, current, result.order[i]);
+    	        printf("\n");
+    	        current = result.order[i];
+    	    }
+    	}
+    	
+    	printf("Do you want to input another route? Yes[1] or No[0]: ");
+    	scanf("%d", &end);
+    	end = !end;
+	}
+    return 0;
+}
