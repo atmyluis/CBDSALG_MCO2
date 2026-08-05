@@ -1,0 +1,28 @@
+void followUserRoute(Graph *m, int stops[], int n, int src, RouteResult *result) {
+    int i;
+    int current = src;
+    int total = 0;
+    int unreachable = 0;
+    int legDist;
+
+    for (i = 0; i < n; i++) {
+        result->order[i] = stops[i];
+
+        if (!unreachable) {
+            legDist = m->dist[current][stops[i]];
+            if (legDist == INT_MAX) {
+                unreachable = 1;
+            } else {
+                total += legDist;
+            }
+        }
+
+        current = stops[i];
+    }
+
+    if (unreachable) {
+        result->total = INT_MAX;
+    } else {
+        result->total = total;
+    }
+}
