@@ -1,4 +1,6 @@
-void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int weights[E]) {
+void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int weights[E]) { //sets all predetermined data in arrays
+	int i;
+
     const char *vNames[V] = {
         "Paris Condo", "Manila Residences Tower II", "One Archer's Place", "Vellagio Tower",
 		"Space Taft", "Heritage Condo", "Royal Plaza Twin Towers", "Alpha Grandview",
@@ -7,7 +9,7 @@ void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int 
 		"W.H. Taft Residences"
     };
 
-    const char *eNames[E][2] = {
+    const char *eNames[E][2] = { //edges formatted in {from, to} format
         {"Paris Condo", "Manila Residences Tower II"}, {"Paris Condo", "Vellagio Tower"}, {"Paris Condo", "Burgundy TransPacific"}, {"Manila Residences Tower II", "Paris Condo"},
         {"Manila Residences Tower II", "One Archer's Place"}, {"Manila Residences Tower II", "Vellagio Tower"}, {"Manila Residences Tower II", "W.H. Taft Residences"}, {"One Archer's Place", "Paris Condo"},
         {"One Archer's Place", "Manila Residences Tower II"}, {"One Archer's Place", "W.H. Taft Residences"}, {"Vellagio Tower", "Paris Condo"}, {"Vellagio Tower", "One Archer's Place"},
@@ -21,7 +23,7 @@ void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int 
         {"W.H. Taft Residences", "Manila Residences Tower II"}, {"W.H. Taft Residences", "One Archer's Place"}, {"W.H. Taft Residences", "Burgundy TransPacific"} 
     };
     
-    int w[E] = {
+    int w[E] = { //weights in travel time(mins) assigned by index E
         2, 4, 1, 4,
         2, 3, 2, 3,
         1, 1, 4, 3,
@@ -34,8 +36,6 @@ void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int 
         3, 1, 1, 2,
         2, 3, 2
     };
-    
-    int i;
  
     for (i = 0; i < V; i++)
         vertexNames[i] = vNames[i];
