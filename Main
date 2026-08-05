@@ -3,7 +3,7 @@ int main() {
 	RouteResult result;
 	int stops[MAX_STOPS]; 
 	char srcName[NAME_LEN], stopName[NAME_LEN];
-    int ok = 1, n = 0, i = 0, end = 0;
+    int ok = 0; n = 0, i = 0, end = 0;
     int src, idx, confirm;
 	
 	const char *vertexNames[V];
@@ -16,30 +16,27 @@ int main() {
     computeAllPairs(&map);
 
     while (!end){
-    	ok = 1;
     	n = 0;
     	i = 0;
     	
-	    printf("\nEnter starting vertex name: ");
-	    scanf("%s", srcName);
+	    printf("\nEnter starting place: ");
+	    scanf("%[^\n]", srcName);
 	    src = nameToIndex(&map, srcName);
 	
 	    if (src == -1) {
-	        printf("Unknown vertex name: %s\n", srcName);
-	        ok = 0;
+	        printf("Unknown place: %s\n", srcName);
 	    }
-	    
-	    if (ok) {
-	        printf("How many vertices do you want to visit? ");
+	    else {
+	        printf("How many places do you want to visit? ");
 	        scanf("%d", &n);
 	
-	        printf("Enter %d vertex names in the ORDER you want to visit them (space separated): ", n);
+	        printf("Enter %d places in the ORDER you want to visit them (enter separated): \n", n);
 	        
 	        while (i < n && ok) {
-	            scanf("%s", stopName);
+	            scanf(" %[^\n]", stopName);
 	            idx = nameToIndex(&map, stopName);
 	            if (idx == -1) {
-	                printf("Unknown vertex name: %s\n", stopName);
+	                printf("\nUnknown vertex name: %s\n", stopName);
 	                ok = 0;
     	        } else {
 		        	stops[i] = idx;
