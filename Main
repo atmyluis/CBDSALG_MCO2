@@ -27,7 +27,7 @@ int main() {
     	i = 0;
     	
 	    printf("\nEnter starting place: ");
-	    scanf("%[^\n]", srcName);
+	    scanf(" %[^\n]", srcName);
 	    src = nameToIndex(&map, srcName);
 	
 	    if (src == -1) {
@@ -35,7 +35,7 @@ int main() {
 	    }
 	    else {
 	        printf("How many places do you want to visit? ");
-	        scanf("%d", &n);
+	        scanf(" %d", &n);
 	
 	        printf("Enter %d places in the ORDER you want to visit them (enter separated): \n", n);
 	        
