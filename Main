@@ -4,19 +4,25 @@ int main() {
 	int stops[MAX_STOPS]; 
 	char srcName[NAME_LEN], stopName[NAME_LEN];
     int ok = 1, n = 0, i = 0, end = 0;
-    int src, idx, confirm;
+    int src, idx, confirm, graphLoaded;
 	
 	const char *vertexNames[V];
     const char *edgeNames[E][2];
     int weights[E];
+    
+    graphLoaded = initGraphData("Graph_Data.txt", vertexNames, edgeNames, weights);
  
-    initGraphData(vertexNames, edgeNames, weights);
-	setVertexNames(&map, vertexNames);
-    buildGraph(&map, edgeNames, weights, E);
-    computeAllPairs(&map);
+    if (!graphLoaded) {
+        printf("Failed to load graph data. Exiting.\n");
+        end = 1;
+    } else {
+        setVertexNames(&map, vertexNames);
+        buildGraph(&map, edgeNames, weights, E);
+        computeAllPairs(&map);
+    }
 
     while (!end){
-		ok = 1;
+    	ok = 1;
     	n = 0;
     	i = 0;
     	
@@ -50,7 +56,7 @@ int main() {
 	    if (ok) {
 	        followUserRoute(&map, stops, n, src, &result);
 	        if (result.total == INT_MAX) {
-	            printf("\nNo valid route exists: one or more places unreachable\n");
+	            printf("\nNo valid route exists: one or more vertices unreachable\n");
 	            printf("given the one-way streets (directed edges).\n");
 	            ok = 0;
 	        }
