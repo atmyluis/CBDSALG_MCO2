@@ -1,50 +1,51 @@
-void initGraphData(const char *vertexNames[V], const char *edgeNames[E][2], int weights[E]) { //sets all predetermined data in arrays
-	int i;
-
-    const char *vNames[V] = {
-        "Paris Condo", "Manila Residences Tower II", "One Archer's Place", "Vellagio Tower",
-		"Space Taft", "Heritage Condo", "Royal Plaza Twin Towers", "Alpha Grandview",
-		"Stanford Tower", "Echelon Tower", "Quirino Ave", "Suntrust Adriatico",
-		"Camella Condo", "Pacific Regency", "Kassel Condo", "Burgundy TransPacific",
-		"W.H. Taft Residences"
-    };
-
-    const char *eNames[E][2] = { //edges formatted in {from, to} format
-        {"Paris Condo", "Manila Residences Tower II"}, {"Paris Condo", "Vellagio Tower"}, {"Paris Condo", "Burgundy TransPacific"}, {"Manila Residences Tower II", "Paris Condo"},
-        {"Manila Residences Tower II", "One Archer's Place"}, {"Manila Residences Tower II", "Vellagio Tower"}, {"Manila Residences Tower II", "W.H. Taft Residences"}, {"One Archer's Place", "Paris Condo"},
-        {"One Archer's Place", "Manila Residences Tower II"}, {"One Archer's Place", "W.H. Taft Residences"}, {"Vellagio Tower", "Paris Condo"}, {"Vellagio Tower", "One Archer's Place"},
-        {"Vellagio Tower", "Space Taft"}, {"Space Taft", "Vellagio Tower"}, {"Space Taft", "Heritage Condo"}, {"Heritage Condo", "Vellagio Tower"},
-        {"Heritage Condo", "Royal Plaza Twin Towers"}, {"Heritage Condo", "Alpha Grandview"}, {"Royal Plaza Twin Towers", "Heritage Condo"}, {"Alpha Grandview", "Stanford Tower"},
-        {"Stanford Tower", "Royal Plaza Twin Towers"}, {"Stanford Tower", "Echelon Tower"}, {"Echelon Tower", "Royal Plaza Twin Towers"}, {"Echelon Tower", "Alpha Grandview"},
-        {"Echelon Tower", "Quirino Ave"}, {"Quirino Ave", "Heritage Condo"}, {"Quirino Ave", "Echelon Tower"}, {"Quirino Ave", "Suntrust Adriatico"},
-        {"Suntrust Adriatico", "Quirino Ave"}, {"Suntrust Adriatico", "Camella Condo"}, {"Camella Condo", "Suntrust Adriatico"}, {"Camella Condo", "Pacific Regency"},
-        {"Pacific Regency", "Camella Condo"}, {"Pacific Regency", "Kassel Condo"}, {"Pacific Regency", "Burgundy TransPacific"}, {"Kassel Condo", "Pacific Regency"},
-        {"Burgundy TransPacific", "Pacific Regency"}, {"Burgundy TransPacific", "Paris Condo"}, {"Burgundy TransPacific", "Manila Residences Tower II"}, {"Burgundy TransPacific", "W.H. Taft Residences"},
-        {"W.H. Taft Residences", "Manila Residences Tower II"}, {"W.H. Taft Residences", "One Archer's Place"}, {"W.H. Taft Residences", "Burgundy TransPacific"} 
-    };
-    
-    int w[E] = { //weights in travel time(mins) assigned by index E
-        2, 4, 1, 4,
-        2, 3, 2, 3,
-        1, 1, 4, 3,
-        3, 3, 5, 4,
-        2, 3, 1, 1,
-        3, 3, 3, 3,
-        3, 3, 3, 2,
-        2, 2, 2, 2,
-        2, 1, 3, 2,
-        3, 1, 1, 2,
-        2, 3, 2
-    };
+int initGraphData(const char *filename, const char *vertexNames[V], const char *edgeNames[E][2], int weights[E]) { //gets all graph data in the text file and puts it in graph struct
+    static char vNameBuf[V][NAME_LEN];
+    static char eNameBuf[E][2][NAME_LEN];
+    FILE *fp;
+    int fileV, fileE;
+    int i;
+    int ok = 1;
  
-    for (i = 0; i < V; i++)
-        vertexNames[i] = vNames[i];
- 
-    for (i = 0; i < E; i++) {
-        edgeNames[i][0] = eNames[i][0];
-        edgeNames[i][1] = eNames[i][1];
-        weights[i] = w[i];
+    fp = fopen(filename, "r");
+    if (fp == NULL) {
+        printf("Error: could not open graph data file '%s'\n", filename);
+        ok = 0;
     }
+ 
+    if (ok && (fscanf(fp, "%d", &fileV) != 1 || fileV != V)) {
+        printf("Error: file '%s' expected %d vertices, found %d\n", filename, V, fileV);
+        ok = 0;
+    }
+ 
+    for (i = 0; ok && i < V; i++) {
+        if (fscanf(fp, " %31[^\n]", vNameBuf[i]) != 1) {
+            printf("Error: failed reading vertex name %d from '%s'\n", i, filename);
+            ok = 0;
+        } else {
+            vertexNames[i] = vNameBuf[i];
+        }
+    }
+ 
+    if (ok && (fscanf(fp, "%d", &fileE) != 1 || fileE != E)) {
+        printf("Error: file '%s' expected %d edges, found %d\n", filename, E, fileE);
+        ok = 0;
+    }
+ 
+    for (i = 0; ok && i < E; i++) {
+        if (fscanf(fp, " %31[^|]|%31[^|]|%d", eNameBuf[i][0], eNameBuf[i][1], &weights[i]) != 3) {
+            printf("Error: failed reading edge %d from '%s'\n", i, filename);
+            ok = 0;
+        } else {
+            edgeNames[i][0] = eNameBuf[i][0];
+            edgeNames[i][1] = eNameBuf[i][1];
+        }
+    }
+ 
+    if (fp != NULL) {
+        fclose(fp);
+    }
+ 
+    return ok;
 }
 
 int nameToIndex(Graph *m, const char *name) { //returns the index of the name
